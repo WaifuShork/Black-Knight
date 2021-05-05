@@ -1,3 +1,47 @@
-./Blacknight/token.txt
-./Blacknight/bin/
-./Blacknight/obj/
+# THIS IS WHAT YOU'LL BE IGNORING
+# MAKE SURE YOU RENAME 'appsettings.example.json' TO 'appsettings.json' 
+# BEFORE YOU EVER COMMIT OR PUSH, OKAY? 
+appsettings.json
+
+# Ignore all this shit down here and don't touch it
+# it's for keeping your repo clean.
+
+# Rider
+.idea/
+
+# Visual Studio Code
+.vscode/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+[Bb]in/
+[Oo]bj/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+*_i.c
+*_p.c
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.log
