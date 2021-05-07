@@ -4,45 +4,50 @@ using System;
 using System.Threading.Tasks;
 
 namespace Blacknight.Services
-{
+{ 
     internal class LoggingService
-    {
-       public LoggingService(DiscordSocketClient client)
-       {
+    { 
+        public LoggingService(DiscordSocketClient client)
+        { 
             client.Log += LogAsync;
             client.Ready += () =>
-            {
-                LogMsg($"{client.CurrentUser} connected to Discord with latency of {client.Latency} ms", "Info", "Blacknight");
+            { 
+                LogMsg($"{client.CurrentUser} connected to Discord with latency of {client.Latency} ms", "Info", "Blacknight").GetAwaiter().GetResult();
                 return Task.CompletedTask;
             };
-       }
-
-       private Task LogAsync(LogMessage msg)
-       {
-            if (msg.Severity == LogSeverity.Info) Console.ForegroundColor = ConsoleColor.Green;
-            if (msg.Severity == LogSeverity.Error) Console.ForegroundColor = ConsoleColor.Red;
-            if (msg.Severity == LogSeverity.Critical) Console.ForegroundColor = ConsoleColor.DarkRed;
-            if (msg.Severity == LogSeverity.Warning) Console.ForegroundColor = ConsoleColor.Yellow;
-
-            Console.WriteLine($"[Severity: {msg.Severity}] " + msg.ToString());
-
-            Console.ResetColor();
-
-            return Task.CompletedTask;
-       }
-
-        private void LogMsg(string msg, string log, string source)
-        {
-            switch(log)
+        }
+        
+        private async Task LogAsync(LogMessage msg)
+        { 
+            Console.ForegroundColor = msg.Severity switch
             {
-                case "Info": Console.ForegroundColor = ConsoleColor.Green; break;
-                case "Error": Console.ForegroundColor = ConsoleColor.Red; break;
-            }
-         
+                LogSeverity.Info => ConsoleColor.Green,
+                LogSeverity.Error => ConsoleColor.Red,
+                LogSeverity.Critical => ConsoleColor.DarkYellow,
+                LogSeverity.Warning => ConsoleColor.Yellow,
+                LogSeverity.Verbose => ConsoleColor.Cyan,
+                LogSeverity.Debug => ConsoleColor.DarkMagenta,
+                _ => throw new ArgumentOutOfRangeException(nameof(msg.Severity), msg.Severity, "Arguments were out of range at LogAsync()l")
+            };
+
+            await Console.Out.WriteLineAsync($"[Severity: {msg.Severity}] {msg}");
+            Console.ResetColor();
+            await Task.CompletedTask;
+        }
+
+        private async Task LogMsg(string msg, string log, string source)
+        {
+            Console.ForegroundColor = log switch
+            {
+                "Info" => ConsoleColor.Green,
+                "Error" => ConsoleColor.Red,
+                _ => throw new ArgumentOutOfRangeException(nameof(log), log, "Arguments were out of range at LogMsg();")
+            };
 
             var time = DateTime.Now.ToString("HH:mm:ss");
-            Console.WriteLine($"[Severity: {log}] {time} {source}  {msg}");
+            await Console.Out.WriteLineAsync($"[Severity: {log}] {time} {source} {msg}");
             Console.ResetColor();
+            await Task.CompletedTask;
         }
     }
 }
